@@ -1,0 +1,9 @@
+FROM oai-base
+
+RUN apt install -y iproute2 dnsutils iputils-ping
+
+WORKDIR /opt/openairinterface5g
+
+RUN apt install -y linux-headers-$(uname -r)
+
+RUN /bin/bash -c "source oaienv" && cd cmake_targets && ./build_oai --UE

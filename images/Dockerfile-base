@@ -1,0 +1,18 @@
+FROM ubuntu:18.04 AS oai-base
+
+RUN apt update && \
+    yes | apt install -y linux-image-lowlatency linux-headers-lowlatency --allow-unauthenticated
+
+RUN apt update && \
+    apt install -y sudo vim git build-essential cmake --allow-unauthenticated
+
+RUN git clone https://gitlab.eurecom.fr/oai/openairinterface5g.git /opt/openairinterface5g -b develop
+
+WORKDIR /opt/openairinterface5g
+
+ENV TZ=America/Los_Angeles
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ENV USER=root
+
+RUN /bin/bash -c "source oaienv" && cd cmake_targets && ./build_oai -I
